@@ -1,0 +1,305 @@
+.tagPicker {
+	width: 240px;
+	position: relative;
+
+	--background-color: #fff;
+	--main-color: #4D18FF;
+	--main-text-color: #1E2330;
+	--main-text-color-hover: #fff;
+	--ripple-background-color: rgba(0, 0, 0, 0.4);
+
+	--select-idle-shadow: 0 4px 16px 0 rgba(22, 42, 90, 0.12);
+	--select-open-shadow: 0 4px 20px -1px rgba(22, 42, 90, 0.12);
+	--select-hover-shadow: 0 4px 24px -1px rgba(22, 42, 90, 0.16);
+	--options-idle-shadow: 0 12px 20px rgba(22, 42, 90, 0.08);
+	--options-open-shadow: 0 16px 24px rgba(22, 42, 90, 0.16);
+}
+.tagPicker select {
+	display: none;
+}
+.tagPicker > .originalSelect{
+	position: absolute;
+	opacity: 0;
+	z-index: -1;
+}
+.tagPicker > .tagPicker_selectedTags {
+	position: relative;
+	z-index: 2;
+	padding: 8px 12px 2px 12px;
+	border-radius: 8px;
+	background: var(--background-color);
+	font-size: 14px;
+	min-height: 44px;
+	box-shadow: var(--select-idle-shadow);
+	transition: box-shadow .3s ease;
+}
+.tagPicker > .tagPicker_selectedTags:hover {
+	box-shadow: var(--select-hover-shadow);
+}
+.tagPicker > .tagPicker_selectedTags .arrow {
+	right: 1px;
+	top: 0;
+	bottom: 0;
+	cursor: pointer;
+	width: 28px;
+	position: absolute;
+}
+.tagPicker > .tagPicker_selectedTags .arrow:before, .tagPicker > .tagPicker_selectedTags .arrow:after {
+	content: '';
+	position: absolute;
+	display: block;
+	width: 2px;
+	height: 8px;
+	border-bottom: 8px solid #99A3BA;
+	top: 43%;
+	transition: all .3s ease;
+}
+.tagPicker > .tagPicker_selectedTags .arrow:before {
+	right: 12px;
+	transform: rotate(-130deg);
+}
+.tagPicker > .tagPicker_selectedTags .arrow:after {
+	left: 9px;
+	transform: rotate(130deg);
+}
+.tagPicker > .tagPicker_selectedTags .tagPicker-placeholder {
+	color: #99A3BA;
+	display: block;
+	position: absolute;
+	left: 12px;
+	cursor: pointer;
+	top: 8px;
+	line-height: 28px;
+	transition: all .3s ease;
+}
+.tagPicker > .tagPicker_selectedTags .tagPicker-placeholder.hide {
+	opacity: 0;
+	visibility: hidden;
+	transform: translate(-4px, 0);
+}
+.tagPicker > .tagPicker_selectedTags .tagPicker_selectedTags-tag {
+	position: relative;
+	padding: 0 24px 6px 8px;
+	line-height: 28px;
+	color: var(--main-text-color);
+	display: inline-block;
+	vertical-align: top;
+	margin: 0 6px 0 0;
+}
+.tagPicker > .tagPicker_selectedTags .tagPicker_selectedTags-tag em {
+	font-style: normal;
+	display: block;
+	white-space: nowrap;
+}
+.tagPicker > .tagPicker_selectedTags .tagPicker_selectedTags-tag:before {
+	content: '';
+	left: 0;
+	top: 0;
+	bottom: 6px;
+	width: 100%;
+	position: absolute;
+	display: block;
+	background: rgba(228, 236, 250, 0.7);
+	z-index: -1;
+	border-radius: 4px;
+}
+.tagPicker > .tagPicker_selectedTags .tagPicker_selectedTags-tag .remove-icon {
+	cursor: pointer;
+	position: absolute;
+	top: 0;
+	right: 0;
+	width: 24px;
+	height: 28px;
+	display: block;
+}
+.tagPicker > .tagPicker_selectedTags .tagPicker_selectedTags-tag .remove-icon:before, 
+.tagPicker > .tagPicker_selectedTags .tagPicker_selectedTags-tag .remove-icon:after {
+	content: '';
+	display: block;
+	width: 2px;
+	height: 10px;
+	position: absolute;
+	left: 50%;
+	top: 50%;
+	background: #4D18FF;
+	border-radius: 1px;
+}
+.tagPicker > .tagPicker_selectedTags .tagPicker_selectedTags-tag .remove-icon:before {
+	transform: translate(-50%, -50%) rotate(45deg);
+}
+.tagPicker > .tagPicker_selectedTags .tagPicker_selectedTags-tag .remove-icon:after {
+	transform: translate(-50%, -50%) rotate(-45deg);
+}
+.tagPicker > .tagPicker_selectedTags .tagPicker_selectedTags-tag.notShown {
+	opacity: 0;
+	transition: opacity .3s ease;
+}
+.tagPicker > .tagPicker_selectedTags .tagPicker_selectedTags-tag.notShown:before {
+	width: 28px;
+	transition: width 0.45s cubic-bezier(0.87, -0.41, 0.19, 1.44) 0.2s;
+}
+.tagPicker > .tagPicker_selectedTags .tagPicker_selectedTags-tag.notShown .remove-icon {
+	opacity: 0;
+	transition: all .3s ease .3s;
+}
+.tagPicker > .tagPicker_selectedTags .tagPicker_selectedTags-tag.notShown em {
+	opacity: 0;
+	transform: translate(-6px, 0);
+	transition: all .4s ease .3s;
+}
+.tagPicker > .tagPicker_selectedTags .tagPicker_selectedTags-tag.notShown.shown {
+	opacity: 1;
+}
+.tagPicker > .tagPicker_selectedTags .tagPicker_selectedTags-tag.notShown.shown:before {
+	width: 100%;
+}
+.tagPicker > .tagPicker_selectedTags .tagPicker_selectedTags-tag.notShown.shown .remove-icon {
+	opacity: 1;
+}
+.tagPicker > .tagPicker_selectedTags .tagPicker_selectedTags-tag.notShown.shown em {
+	opacity: 1;
+	transform: translate(0, 0);
+}
+.tagPicker > .tagPicker_selectedTags .tagPicker_selectedTags-tag.removing {
+	pointer-events: none;
+}
+.tagPicker > .tagPicker_selectedTags .tagPicker_selectedTags-tag.removing:before {
+	width: 28px;
+	transition: width 0.4s cubic-bezier(0.87, -0.41, 0.19, 1.44) 0s;
+}
+.tagPicker > .tagPicker_selectedTags .tagPicker_selectedTags-tag.removing i {
+	opacity: 0;
+	transition: all .3s ease 0s;
+}
+.tagPicker > .tagPicker_selectedTags .tagPicker_selectedTags-tag.removing em {
+	opacity: 0;
+	transform: translate(-12px, 0);
+	transition: all .4s ease 0s;
+}
+.tagPicker > .tagPicker_selectedTags .tagPicker_selectedTags-tag.removing.disappear {
+	opacity: 0;
+	transition: opacity .5s ease 0s;
+}
+.tagPicker > .tagPicker_optionList {
+	margin: 0;
+	padding: 0;
+	list-style: none;
+	font-size: 16px;
+	z-index: 1;
+	position: absolute;
+	top: 100%;
+	left: 0;
+	right: 0;
+	visibility: hidden;
+	opacity: 0;
+	border-radius: 8px;
+	transform: translate(0, 20px) scale(0.8);
+	transform-origin: 0 0;
+	/*filter: drop-shadow(0 12px 20px rgba(22, 42, 90, 0.08));*/
+	box-shadow: var(--options-idle-shadow);
+	transition: all 0.4s ease, transform 0.4s cubic-bezier(0.87, -0.41, 0.19, 1.44), box-shadow 0.3s ease 0.2s;
+	transition-duration: var(--t);
+}
+.tagPicker > .tagPicker_optionList .tagPicker_optionList-option {
+	color: var(--main-text-color);
+	background: var(--background-color);
+	padding: 12px 16px;
+	cursor: pointer;
+	overflow: hidden;
+	position: relative;
+	transition: background .3s ease, color .3s ease, transform .3s ease .3s, opacity .5s ease .3s, border-radius .3s ease;
+}
+.tagPicker > .tagPicker_optionList .tagPicker_optionList-option:first-child {
+	border-radius: 8px 8px 0 0;
+}
+.tagPicker > .tagPicker_optionList .tagPicker_optionList-option:first-child:last-child {
+	border-radius: 8px;
+}
+.tagPicker > .tagPicker_optionList .tagPicker_optionList-option:last-child {
+	border-radius: 0 0 8px 8px;
+}
+.tagPicker > .tagPicker_optionList .tagPicker_optionList-option:last-child:first-child {
+	border-radius: 8px;
+}
+.tagPicker > .tagPicker_optionList .tagPicker_optionList-option:hover {
+	background: var(--main-color);
+	color: var(--main-text-color-hover);
+}
+.tagPicker > .tagPicker_optionList .tagPicker_optionList-option:after {
+	content: '';
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	width: 6px;
+	height: 6px;
+	background: var(--ripple-background-color);
+	opacity: 0;
+	border-radius: 100%;
+	transform: scale(1, 1) translate(-50%, -50%);
+	transform-origin: 50% 50%;
+}
+.tagPicker > .tagPicker_optionList .tagPicker_optionList-option.beforeRemoving {
+	border-radius: 0 0 8px 8px;
+}
+.tagPicker > .tagPicker_optionList .tagPicker_optionList-option.beforeRemoving:first-child {
+	border-radius: 8px;
+}
+.tagPicker > .tagPicker_optionList .tagPicker_optionList-option.afterRemoving {
+	border-radius: 8px 8px 0 0;
+}
+.tagPicker > .tagPicker_optionList .tagPicker_optionList-option.afterRemoving:last-child {
+	border-radius: 8px;
+}
+.tagPicker > .tagPicker_optionList .tagPicker_optionList-option.removing {
+	transform: scale(0);
+	opacity: 0;
+}
+.tagPicker > .tagPicker_optionList .tagPicker_optionList-option.removing:after {
+	animation: ripple .4s ease-out;
+}
+.tagPicker > .tagPicker_optionList .tagPicker_optionList-option.show {
+	transform: scale(0);
+	opacity: 0;
+	animation: scale-up .35s ease forwards;
+}
+.tagPicker.open > .tagPicker_selectedTags {
+	box-shadow: var(--select-open-shadow);
+}
+.tagPicker.open > .tagPicker_selectedTags .arrow:before {
+	transform: rotate(-50deg);
+}
+.tagPicker.open > .tagPicker_selectedTags .arrow:after {
+	transform: rotate(50deg);
+}
+.tagPicker.open > .tagPicker_optionList {
+	transform: translate(0, 12px) scale(1);
+	opacity: 1;
+	visibility: visible;
+	/*filter: drop-shadow(0 16px 24px rgba(22, 42, 90, 0.16));*/
+	box-shadow: var(--options-open-shadow);
+	transition-duration: var(--t);
+}
+@keyframes ripple {
+	0% {
+		transform: scale(0, 0);
+		opacity: 1;
+	}
+	25% {
+		transform: scale(30, 30);
+		opacity: 1;
+	}
+	100% {
+		opacity: 0;
+		transform: scale(50, 50);
+	}
+}
+@keyframes scale-up {
+	0% {
+		transform: scale(0);
+		opacity: 0;
+	}
+	100% {
+		transform: scale(1);
+		opacity: 1;
+	}
+}
