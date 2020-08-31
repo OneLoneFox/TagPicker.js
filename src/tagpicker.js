@@ -283,6 +283,7 @@ class TagPicker {
 	disable(){
 		this._removeProxies();
 		if(!this.fancySelect.classList.contains('disabled')){
+			this.close();
 			this.fancySelect.classList.add('disabled');
 		}
 	}

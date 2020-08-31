@@ -9,8 +9,9 @@
 	--main-text-color-hover: #fff;
 	--ripple-background-color: rgba(0, 0, 0, 0.4);
 	--tag-text-color: #1E2330;
-	--toggle-arrow-color: ;
-	--remove-icon-color: ;
+	--placeholder-text-color: #99A3BA;
+	--toggle-arrow-color: #99A3BA;
+	--remove-icon-color: #4D18FF;
 
 	--select-idle-shadow: 0 4px 16px 0 rgba(22, 42, 90, 0.12);
 	--select-open-shadow: 0 4px 20px -1px rgba(22, 42, 90, 0.12);
@@ -19,6 +20,10 @@
 	--options-open-shadow: 0 16px 24px rgba(22, 42, 90, 0.16);
 
 	font-family: 'Roboto', 'Arial';
+}
+.tagPicker.disabled{
+	pointer-events: none;
+	opacity: .6;
 }
 .tagPicker > *,
 .tagPicker > *:before,
@@ -63,7 +68,7 @@
 	width: 2px;
 	height: 8px;
 	/*border-bottom: 8px solid #99A3BA;*/
-	background: #99A3BA;
+	background: var(--toggle-arrow-color);
 	top: 43%;
 	transition: all .3s ease;
 }
@@ -76,7 +81,7 @@
 	transform: rotate(130deg);
 }
 .tagPicker > .tagPicker_selectedTags .tagPicker-placeholder {
-	color: #99A3BA;
+	color: var(--placeholder-text-color);
 	display: block;
 	position: absolute;
 	left: 12px;
@@ -129,12 +134,12 @@
 .tagPicker > .tagPicker_selectedTags .tagPicker_selectedTags-tag .remove-icon:after {
 	content: '';
 	display: block;
-	width: 2px;
+	width: 1.5px;
 	height: 10px;
 	position: absolute;
 	left: 50%;
 	top: 50%;
-	background: #4D18FF;
+	background: var(--remove-icon-color);
 	border-radius: 1px;
 }
 .tagPicker > .tagPicker_selectedTags .tagPicker_selectedTags-tag .remove-icon:before {
@@ -209,7 +214,6 @@
 	transform: translate(0, 20px) scale(0.8);
 	transform-origin: 0 0;
 	filter: drop-shadow(var(--options-idle-shadow));
-	/*box-shadow: var(--options-idle-shadow);*/
 	transition: all 0.4s ease, transform 0.4s cubic-bezier(0.87, -0.41, 0.19, 1.44), filter 0.3s ease 0.2s;
 	transition-duration: calc(var(--t) * 1ms);
 }
@@ -289,7 +293,6 @@
 	opacity: 1;
 	visibility: visible;
 	filter: drop-shadow(var(--options-open-shadow));
-	/*box-shadow: var(--options-open-shadow);*/
 	transition-duration: calc(var(--t) * 1ms);
 }
 @keyframes ripple {

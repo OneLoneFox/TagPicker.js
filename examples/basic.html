@@ -10,6 +10,11 @@
 			margin: 0;
 			padding: 0;
 		}
+		body{
+			display: flex;
+			align-items: center;
+			justify-content: center;
+		}
 	</style>
 </head>
 <body>
@@ -25,15 +30,11 @@
 		var selectEl = document.getElementById("my-select");
 		var tagPickerOptions = {
 			// your settings here
-			openTransition: {
-				duration: 300,
-			},
-			closeTransition: {
+			// openOnDeselect: false,
+			// closeOnSelect: true,
+			defaultTransition:{
 				duration: 150,
-			},
-			optionRemoveTransition: {
-				delay: 150,
-			},
+			}
 		};
 		var tagPicker = new TagPicker(selectEl, tagPickerOptions);
 		selectEl.addEventListener('change', function(e){
