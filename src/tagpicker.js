@@ -292,17 +292,17 @@ class TagPicker {
 		this.fancySelect.classList.remove('disabled');
 	}
 	getSelectedOptions(){
-		// let selectedOptions = [];
-		// for(let i = 0; i < this.selectOptions.length; i++){
-		// 	if(this.selectOptions[i].selected){
-		// 		selectedOptions.push(this.selectOptions[i]);
-		// 	}
-		// }
-		// return selectedOptions;
+		let selectedOptions = [];
+		for(let i = 0; i < this.selectOptions.length; i++){
+			if(this.selectOptions[i].selected){
+				selectedOptions.push(this.selectOptions[i]);
+			}
+		}
+		return selectedOptions;
 		
 		/* Danger experimental zone wiu wiu wiu
 		*/
-		/**/
+		/**
 		return this.selectElement.querySelectorAll('option[selected]:not(:disabled)');
 		/**/
 	}
