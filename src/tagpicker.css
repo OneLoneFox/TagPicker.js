@@ -1,4 +1,5 @@
 .tagPicker {
+	box-sizing: border-box;
 	width: 240px;
 	position: relative;
 
@@ -7,12 +8,22 @@
 	--main-text-color: #1E2330;
 	--main-text-color-hover: #fff;
 	--ripple-background-color: rgba(0, 0, 0, 0.4);
+	--tag-text-color: #1E2330;
+	--toggle-arrow-color: ;
+	--remove-icon-color: ;
 
 	--select-idle-shadow: 0 4px 16px 0 rgba(22, 42, 90, 0.12);
 	--select-open-shadow: 0 4px 20px -1px rgba(22, 42, 90, 0.12);
 	--select-hover-shadow: 0 4px 24px -1px rgba(22, 42, 90, 0.16);
 	--options-idle-shadow: 0 12px 20px rgba(22, 42, 90, 0.08);
 	--options-open-shadow: 0 16px 24px rgba(22, 42, 90, 0.16);
+
+	font-family: 'Roboto', 'Arial';
+}
+.tagPicker > *,
+.tagPicker > *:before,
+.tagPicker > *:after{
+	box-sizing: border-box;
 }
 .tagPicker select {
 	display: none;
@@ -36,7 +47,7 @@
 .tagPicker > .tagPicker_selectedTags:hover {
 	box-shadow: var(--select-hover-shadow);
 }
-.tagPicker > .tagPicker_selectedTags .arrow {
+.tagPicker > .tagPicker_selectedTags .tagPicker_toggleArrow {
 	right: 1px;
 	top: 0;
 	bottom: 0;
@@ -44,21 +55,23 @@
 	width: 28px;
 	position: absolute;
 }
-.tagPicker > .tagPicker_selectedTags .arrow:before, .tagPicker > .tagPicker_selectedTags .arrow:after {
+.tagPicker > .tagPicker_selectedTags .tagPicker_toggleArrow:before,
+.tagPicker > .tagPicker_selectedTags .tagPicker_toggleArrow:after {
 	content: '';
 	position: absolute;
 	display: block;
 	width: 2px;
 	height: 8px;
-	border-bottom: 8px solid #99A3BA;
+	/*border-bottom: 8px solid #99A3BA;*/
+	background: #99A3BA;
 	top: 43%;
 	transition: all .3s ease;
 }
-.tagPicker > .tagPicker_selectedTags .arrow:before {
+.tagPicker > .tagPicker_selectedTags .tagPicker_toggleArrow:before {
 	right: 12px;
 	transform: rotate(-130deg);
 }
-.tagPicker > .tagPicker_selectedTags .arrow:after {
+.tagPicker > .tagPicker_selectedTags .tagPicker_toggleArrow:after {
 	left: 9px;
 	transform: rotate(130deg);
 }
@@ -72,7 +85,7 @@
 	line-height: 28px;
 	transition: all .3s ease;
 }
-.tagPicker > .tagPicker_selectedTags .tagPicker-placeholder.hide {
+.tagPicker > .tagPicker_selectedTags .tagPicker-placeholder.hidden {
 	opacity: 0;
 	visibility: hidden;
 	transform: translate(-4px, 0);
@@ -81,7 +94,7 @@
 	position: relative;
 	padding: 0 24px 6px 8px;
 	line-height: 28px;
-	color: var(--main-text-color);
+	color: var(--tag-text-color);
 	display: inline-block;
 	vertical-align: top;
 	margin: 0 6px 0 0;
@@ -195,10 +208,10 @@
 	border-radius: 8px;
 	transform: translate(0, 20px) scale(0.8);
 	transform-origin: 0 0;
-	/*filter: drop-shadow(0 12px 20px rgba(22, 42, 90, 0.08));*/
-	box-shadow: var(--options-idle-shadow);
-	transition: all 0.4s ease, transform 0.4s cubic-bezier(0.87, -0.41, 0.19, 1.44), box-shadow 0.3s ease 0.2s;
-	transition-duration: var(--t);
+	filter: drop-shadow(var(--options-idle-shadow));
+	/*box-shadow: var(--options-idle-shadow);*/
+	transition: all 0.4s ease, transform 0.4s cubic-bezier(0.87, -0.41, 0.19, 1.44), filter 0.3s ease 0.2s;
+	transition-duration: calc(var(--t) * 1ms);
 }
 .tagPicker > .tagPicker_optionList .tagPicker_optionList-option {
 	color: var(--main-text-color);
@@ -265,19 +278,19 @@
 .tagPicker.open > .tagPicker_selectedTags {
 	box-shadow: var(--select-open-shadow);
 }
-.tagPicker.open > .tagPicker_selectedTags .arrow:before {
+.tagPicker.open > .tagPicker_selectedTags .tagPicker_toggleArrow:before {
 	transform: rotate(-50deg);
 }
-.tagPicker.open > .tagPicker_selectedTags .arrow:after {
+.tagPicker.open > .tagPicker_selectedTags .tagPicker_toggleArrow:after {
 	transform: rotate(50deg);
 }
 .tagPicker.open > .tagPicker_optionList {
 	transform: translate(0, 12px) scale(1);
 	opacity: 1;
 	visibility: visible;
-	/*filter: drop-shadow(0 16px 24px rgba(22, 42, 90, 0.16));*/
-	box-shadow: var(--options-open-shadow);
-	transition-duration: var(--t);
+	filter: drop-shadow(var(--options-open-shadow));
+	/*box-shadow: var(--options-open-shadow);*/
+	transition-duration: calc(var(--t) * 1ms);
 }
 @keyframes ripple {
 	0% {

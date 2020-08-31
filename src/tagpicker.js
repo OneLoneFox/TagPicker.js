@@ -5,6 +5,7 @@ class TagPicker {
 		}else{
 			this.selectElement = _selectElement;
 		}
+		this.selectElement.tagPicker = this;
 		this.selectOptions = this.selectElement.querySelectorAll('option');
 		let defaultOptions = {
 			closeOnSelect: false,
@@ -12,8 +13,12 @@ class TagPicker {
 			defaultTransition: {
 				duration: 300,
 				easing: 'ease-in-out',
-			}
+			},
 			//open, close, select, deselect — transitions
+			defaultRemoveTransition: {
+				delay: 300,
+			}
+			//optionRemove, tagRemove — transition delays
 			//customRemoveIconElement — ToDo
 			//customToggleIconElement — ToDo
 		}
@@ -25,7 +30,7 @@ class TagPicker {
 		this.selectedTags = document.createElement('div');
 
 		this.selectedTags.classList.add('tagPicker_selectedTags');
-		let placeholder = this.selectElement.dataset.placeholder || this.selectElement.querySelector('[data-placeholder]').dataset.placeholder;
+		let placeholder = this.selectElement.dataset.placeholder ?? this.selectElement.querySelector('[data-placeholder]').dataset.placeholder;
 		let placeholderContainer = document.createElement('span');
 		placeholderContainer.classList.add('tagPicker-placeholder');
 		placeholderContainer.innerText = placeholder;
@@ -40,9 +45,13 @@ class TagPicker {
 		this.optionList = this._createOptionList();
 
 		this.fancySelect.append(this.selectedTags, this.optionList);
+		this.selectElement.parentNode.insertBefore(this.fancySelect, this.selectElement);
 		this.selectElementWrapper = document.createElement('div');
 		this.selectElementWrapper.classList.add('originalSelect');
 		this.selectElementWrapper.appendChild(this.selectElement);
+
+		this._addOptionsProxy();
+		this._addTagsProxy();
 	}
 
 	_createOption(text, value){
@@ -68,15 +77,15 @@ class TagPicker {
 	}
 	_createOptionList(){
 		let optionList = document.createElement('ul');
-		optionlist.classList.add('tagPicker_optionList')
+		optionList.classList.add('tagPicker_optionList')
 		let customOptions = this._generateOptions();
-		optionList.append(customOptions);
+		optionList.append(...customOptions);
 		return optionList;
 	}
 	_createTag(text, value){
 		let tag = document.createElement('a');
 		tag.classList.add('tagPicker_selectedTags-tag');
-		tag.dataset.value = option.value;
+		tag.dataset.value = value;
 		tag.innerHTML = `<em>${text}</em><i class="remove-icon"></i>`;
 		return tag;
 	}
@@ -98,7 +107,7 @@ class TagPicker {
 		let styles = window.getComputedStyle(option);
         let optionHeight = styles.height;
         let optionPadding = styles.padding;
-        let transitionOptions = this.options.selectTransition || this.options.defaultTransition;
+        let transitionOptions = this.options.selectTransition ?? this.options.defaultTransition;
         let animation = option.animate([
             {
                 height: optionHeight,
@@ -113,15 +122,8 @@ class TagPicker {
         });
         return animation;
 	}
-	_toggleProxy(e){
-		let toggleArrow = e.target.closest('.toggleArrow');
-		if (toggleArrow){
-			this.toggle();
-		}
-	}
-	_optionsProxy(e){
-		this._toggleProxy(e);
-		let option = e.target.closest('tagPicker_optionList-option');
+	_optionsProxy = (e) => {
+		let option = e.target.closest('.tagPicker_optionList-option');
 		if(!option){return;}
 		if(option.classList.contains('removing')){return;}
 		
@@ -133,34 +135,37 @@ class TagPicker {
 		}
 		option.classList.add('removing');
 		let selectedTag = this.selectOption(option.dataset.value);
+		selectedTag.classList.add('notShown');
 		
 		setTimeout(() => {
-			selectedTag.classlist.add('shown'); // delayed show (animation choreography)
-			let removing = this._animateOptionRemove(option);
-			removing.onfinish = () => {
-				if(option.previousElementSibling){
-					option.previousElementSibling.classlist.remove('beforeRemoving');
-				}
-				if(option.nextElementSibling){
-					option.nextElementSibling.classlist.remove('afterRemoving');
-				}
-	            option.remove();
-	            if(this.options.closeOnSelect){
-					this.close();
-				}
-	        }
+			selectedTag.classList.add('shown'); // delayed show (animation choreography)
+			setTimeout(() => {
+				let removing = this._animateOptionRemove(option);
+				removing.onfinish = () => {
+					if(option.previousElementSibling){
+						option.previousElementSibling.classList.remove('beforeRemoving');
+					}
+					if(option.nextElementSibling){
+						option.nextElementSibling.classList.remove('afterRemoving');
+					}
+		            option.remove();
+		            if(this.options.closeOnSelect){
+						this.close();
+					}
+		        }
+			}, (this.options.optionRemoveTransition && this.options.optionRemoveTransition.delay) ?? this.options.defaultRemoveTransition.delay)
 		}, 
-		this.options.selectTransition.duration || this.options.defaultTransition.duration);
+		(this.options.selectTransition && this.options.selectTransition.duration) ?? this.options.defaultTransition.duration);
 	}
 	_addOptionsProxy(){
-		this.optionsList.addEventListener("click", this._optionsProxy);
+		this.optionList.addEventListener("click", this._optionsProxy);
 	}
 	_animateTagRemove(tag){
 		let styles = window.getComputedStyle(tag);
         let padding = styles.padding;
         let deltaWidth = styles.width;
         let deltaHeight = styles.height;
-        let transitionOptions = this.options.deselectTransition || this.options.defaultTransition;
+        let transitionOptions = this.options.deselectTransition ?? this.options.defaultTransition;
         let animation = tag.animate([
             {
                 width: deltaWidth,
@@ -175,12 +180,22 @@ class TagPicker {
         ], {...transitionOptions});
         return animation;
 	}
-	_tagsProxy(e){
+	_toggleProxy = (e) => {
+		let toggleArrow = e.target.closest('.tagPicker_toggleArrow');
+		if (toggleArrow){
+			this.toggle();
+		}
+	}
+	_tagsProxy = (e) => {
+		this._toggleProxy(e);
 		// ToDo: clicking only on remove icon instead of anywhere on the tag(?)
-		let tag = e.closest('tagPicker_selectedTags-tag');
+		let tag = e.target.closest('.tagPicker_selectedTags-tag');
 		if(!tag){return;}
 		if(tag.classList.contains('removing')){return;}
-		tag.className = '';
+		// tag.className = '';
+		tag.classList.remove('notShown');
+		tag.classList.remove('shown');
+		
 		tag.classList.add('removing');
 		tag.classList.add('disappear');
 
@@ -191,7 +206,7 @@ class TagPicker {
 			/* In case I remove the transform delay on .tagPicker_optionList-option
 			setTimeout(() => {
 				createdOption.classList.add('shown');
-			}, this.options.openTransition.duration || this.options.defaultTransition.duration);
+			}, this.options.openTransition.duration ?? this.options.defaultTransition.duration);
 			*/
 		}
 		/* Same reason stated above
@@ -204,24 +219,25 @@ class TagPicker {
 			let removing = this._animateTagRemove(tag);
 			removing.onfinish = () => {
 				tag.remove();
-				if (optionsList.length === 0){
+				if (this.selectElement.selectedOptions.length === 0){
 					this._showPlaceholder();
 				}
-				createdOption.className = '';
+				// createdOption.className = '';
+				createdOption.classList.remove('show');
 			}
-		}, this.options.deselectTransition.duration || this.options.defaultTransition.duration);
+		}, (this.options.deselectTransition && this.options.deselectTransition.duration) ?? this.options.defaultTransition.duration);
 		
 	}
 	_addTagsProxy(){
 		this.selectedTags.addEventListener("click", this._tagsProxy);
 	} // event listener in this.selectedTags
 	_removeProxies(){
-		this.optionsList.removeEventListener("click", this._optionsProxy);
+		this.optionList.removeEventListener("click", this._optionsProxy);
 		this.selectedTags.removeEventListener("click", this._tagsProxy);
 	}
 
-	selectOption(optionValue){
-		let option = this.selectOptions.querySelector(`[value="${optionValue}"]`);
+	selectOption(value){
+		let option = this.selectElement.querySelector(`option[value="${value}"]`);
 		
 		option.selected = true;
 		let event = new CustomEvent('change');
@@ -234,8 +250,8 @@ class TagPicker {
 		this._hidePlaceholder();
 		return optionTag;
 	}
-	deselectOption(optionValue){
-		let option = this.selectOptions.querySelector(`[value="${optionValue}"`);
+	deselectOption(value){
+		let option = this.selectElement.querySelector(`option[value="${value}"`);
 		
 		option.selected = false;
 		let event = new CustomEvent('change');
@@ -248,13 +264,13 @@ class TagPicker {
 		return customOption;
 	}
 	open(){
-		this.fancySelect.style = `--t: ${this.options.openTransition.duration || this.options.defaultTransition.duration}`;
+		this.fancySelect.style = `--t: ${(this.options.openTransition && this.options.openTransition.duration) ?? this.options.defaultTransition.duration}`;
 		if(!this.fancySelect.classList.contains('open')){
 			this.fancySelect.classList.add('open');
 		}
 	}; // style = '--t: this.options.openTransition.duration'
 	close(){
-		this.fancySelect.style = `--t: ${this.options.closeTransition.duration || this.options.defaultTransition.duration}`;
+		this.fancySelect.style = `--t: ${(this.options.closeTransition && this.options.closeTransition.duration) ?? this.options.defaultTransition.duration}`;
 		this.fancySelect.classList.remove('open');
 	};
 	toggle(){
@@ -275,6 +291,20 @@ class TagPicker {
 		this._addTagsProxy();
 		this.fancySelect.classList.remove('disabled');
 	}
-	getSelectedOptions(){return;}
+	getSelectedOptions(){
+		// let selectedOptions = [];
+		// for(let i = 0; i < this.selectOptions.length; i++){
+		// 	if(this.selectOptions[i].selected){
+		// 		selectedOptions.push(this.selectOptions[i]);
+		// 	}
+		// }
+		// return selectedOptions;
+		
+		/* Danger experimental zone wiu wiu wiu
+		*/
+		/**/
+		return this.selectElement.querySelectorAll('option[selected]:not(:disabled)');
+		/**/
+	}
 	update(){return;}
 }

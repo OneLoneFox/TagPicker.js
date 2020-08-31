@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>TagPicker basic example</title>
+	<link rel="stylesheet" href="../src/tagpicker.css">
+	<style>
+		body, html{
+			width: 100%;
+			height: 100%;
+			margin: 0;
+			padding: 0;
+		}
+	</style>
+</head>
+<body>
+	<select multiple data-placeholder="Add tags" id="my-select">
+		<option value="0">Sketch</option>
+	    <option value="1" selected>Framer X</option>
+	    <option value="2">Photoshop</option>
+	    <option value="3" selected>Principle</option>
+	    <option value="4">Invision</option>
+	</select>
+	<script type="text/javascript" src="../src/tagpicker.js"></script>
+	<script type="text/javascript">
+		var selectEl = document.getElementById("my-select");
+		var tagPickerOptions = {
+			// your settings here
+			openTransition: {
+				duration: 300,
+			},
+			closeTransition: {
+				duration: 150,
+			},
+			optionRemoveTransition: {
+				delay: 150,
+			},
+		};
+		var tagPicker = new TagPicker(selectEl, tagPickerOptions);
+		selectEl.addEventListener('change', function(e){
+			let selectedTags = this.tagPicker.getSelectedOptions();
+			console.log(selectedTags);
+		});
+	</script>
+</body>
+</html>
