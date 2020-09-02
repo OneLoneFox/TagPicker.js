@@ -66,7 +66,6 @@ class TagPicker {
 		this.selectOptions.forEach((option, idx) => {
 			let optionText = option.innerText;
 			if (option.selected){
-				// selectedTags.push(this._createTag(optionText, option.value));
 				this._selectOptionByIndex(idx);
 			}else{
 				customOptions.push(this._createOption(optionText, option.value));	
@@ -89,7 +88,7 @@ class TagPicker {
 		tag.innerHTML = `<em>${text}</em><i class="remove-icon"></i>`;
 		return tag;
 	}
-	_selectOptionByIndex(idx){ // preselected options in original select
+	_selectOptionByIndex(idx){
 		let optionTag = this._appendTag(this.selectOptions[idx]);
 		this.selectedTags.appendChild(optionTag);
 		this._hidePlaceholder();
@@ -129,7 +128,6 @@ class TagPicker {
 	}
 	_removeOptions(){
 		this._removeProxies();
-		// loop the damn thing
 	}
 	_showPlaceholder(){this.placeholderContainer.classList.remove("hidden");}
 	_hidePlaceholder(){this.placeholderContainer.classList.add("hidden");}
@@ -173,7 +171,7 @@ class TagPicker {
 		selectedTag.classList.add('notShown');
 		
 		setTimeout(() => {
-			selectedTag.classList.add('shown'); // delayed show (animation choreography)
+			selectedTag.classList.add('shown');
 			setTimeout(() => {
 				let removing = this._animateOptionRemove(option);
 				removing.onfinish = () => {
@@ -227,7 +225,6 @@ class TagPicker {
 		let tag = e.target.closest('.tagPicker_selectedTags-tag');
 		if(!tag){return;}
 		if(tag.classList.contains('removing')){return;}
-		// tag.className = '';
 		tag.classList.remove('notShown');
 		tag.classList.remove('shown');
 		
@@ -257,7 +254,6 @@ class TagPicker {
 				if (this.selectElement.selectedOptions.length === 0){
 					this._showPlaceholder();
 				}
-				// createdOption.className = '';
 				createdOption.classList.remove('show');
 			}
 		}, (this.options.deselectTransition && this.options.deselectTransition.duration) ?? this.options.defaultTransition.duration);
@@ -265,7 +261,7 @@ class TagPicker {
 	}
 	_addTagsProxy(){
 		this.selectedTags.addEventListener("click", this._tagsProxy);
-	} // event listener in this.selectedTags
+	}
 	_removeProxies(){
 		this.optionList.removeEventListener("click", this._optionsProxy);
 		this.selectedTags.removeEventListener("click", this._tagsProxy);
@@ -305,19 +301,6 @@ class TagPicker {
 		}
 
 		return true;
-		/*
-		let option = this.selectElement.querySelector(`option[value="${value}"`);
-		
-		option.selected = false;
-		let event = new CustomEvent('change');
-		this.selectElement.dispatchEvent(event);
-		
-		let optionText = option.innerText;
-		let optionValue = option.value;
-		let customOption = this._createOption(optionText, optionValue);
-		this.optionList.appendChild(customOption);
-		return customOption;
-		*/
 	}
 	deselectAll(fireEvent = false){
 		let selectedOptions = this.getSelectedOptions();
@@ -333,7 +316,7 @@ class TagPicker {
 		if(!this.fancySelect.classList.contains('open')){
 			this.fancySelect.classList.add('open');
 		}
-	}; // style = '--t: this.options.openTransition.duration'
+	};
 	close(){
 		this.fancySelect.style = `--t: ${(this.options.closeTransition && this.options.closeTransition.duration) ?? this.options.defaultTransition.duration}`;
 		this.fancySelect.classList.remove('open');
@@ -365,12 +348,6 @@ class TagPicker {
 			}
 		}
 		return selectedOptions;
-		
-		/* Danger experimental zone wiu wiu wiu
-		*/
-		/**
-		return this.selectElement.querySelectorAll('option[selected]:not(:disabled)');
-		/**/
 	}
 	update(){return;}
 }
