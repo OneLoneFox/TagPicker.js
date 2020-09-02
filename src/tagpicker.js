@@ -67,7 +67,7 @@ class TagPicker {
 			let optionText = option.innerText;
 			if (option.selected){
 				// selectedTags.push(this._createTag(optionText, option.value));
-				this._selectOption(idx);
+				this._selectOptionByIndex(idx);
 			}else{
 				customOptions.push(this._createOption(optionText, option.value));	
 			}
@@ -89,12 +89,43 @@ class TagPicker {
 		tag.innerHTML = `<em>${text}</em><i class="remove-icon"></i>`;
 		return tag;
 	}
-	_selectOption(idx){ // preselected options in original select
-		let optionText = this.selectOptions[idx].innerText;
-		let optionValue = this.selectOptions[idx].value;
+	_selectOptionByIndex(idx){ // preselected options in original select
+		let optionTag = this._appendTag(this.selectOptions[idx]);
+		this.selectedTags.appendChild(optionTag);
+		this._hidePlaceholder();
+	}
+	_selectOption(value){
+		let option = this.selectElement.querySelector(`option[value="${value}"]`);
+		
+		option.selected = true;
+		this._dispatchEvent();
+		
+		let optionTag = this._appendTag(option);
+		return optionTag;
+	}
+	_deselectOption(value){
+		let option = this.selectElement.querySelector(`option[value="${value}"`);
+		
+		option.selected = false;
+		this._dispatchEvent();
+		
+		let customOption = this._appendOption(option);
+		return customOption;
+	}
+	_appendTag(option){
+		let optionText = option.innerText;
+		let optionValue = option.value;
 		let optionTag = this._createTag(optionText, optionValue);
 		this.selectedTags.appendChild(optionTag);
 		this._hidePlaceholder();
+		return optionTag;
+	}
+	_appendOption(option){
+		let optionText = option.innerText;
+		let optionValue = option.value;
+		let customOption = this._createOption(optionText, optionValue);
+		this.optionList.appendChild(customOption);
+		return customOption;
 	}
 	_removeOptions(){
 		this._removeProxies();
@@ -102,6 +133,10 @@ class TagPicker {
 	}
 	_showPlaceholder(){this.placeholderContainer.classList.remove("hidden");}
 	_hidePlaceholder(){this.placeholderContainer.classList.add("hidden");}
+	_dispatchEvent(){
+		let event = new CustomEvent('change');
+		this.selectElement.dispatchEvent(event);
+	}
 	
 	_animateOptionRemove(option){
 		let styles = window.getComputedStyle(option);
@@ -134,7 +169,7 @@ class TagPicker {
 			option.nextElementSibling.classList.add('afterRemoving');
 		}
 		option.classList.add('removing');
-		let selectedTag = this.selectOption(option.dataset.value);
+		let selectedTag = this._selectOption(option.dataset.value);
 		selectedTag.classList.add('notShown');
 		
 		setTimeout(() => {
@@ -199,7 +234,7 @@ class TagPicker {
 		tag.classList.add('removing');
 		tag.classList.add('disappear');
 
-		let createdOption = this.deselectOption(tag.dataset.value);
+		let createdOption = this._deselectOption(tag.dataset.value);
 		createdOption.classList.add('show');
 		if(this.options.openOnDeselect){
 			this.open();
@@ -236,21 +271,41 @@ class TagPicker {
 		this.selectedTags.removeEventListener("click", this._tagsProxy);
 	}
 
-	selectOption(value){
+	selectOption(value, fireEvent = false){
 		let option = this.selectElement.querySelector(`option[value="${value}"]`);
-		
+		let customOption = this.optionList.querySelector(`[data-value="${value}"]`);
+
+		if(!option){return false;}
+		if(option.selected){return false;}
 		option.selected = true;
-		let event = new CustomEvent('change');
-		this.selectElement.dispatchEvent(event);
+		if(fireEvent){
+			this._dispatchEvent();
+		}
+
+		this._appendTag(option);
+		customOption.remove();
 		
-		let optionText = option.innerText;
-		let optionValue = option.value;
-		let optionTag = this._createTag(optionText, optionValue);
-		this.selectedTags.appendChild(optionTag);
-		this._hidePlaceholder();
-		return optionTag;
+		return true;
 	}
-	deselectOption(value){
+	deselectOption(value, fireEvent = false){
+		let option = this.selectElement.querySelector(`option[value="${value}"]`);
+		let tag = this.selectedTags.querySelector(`[data-value="${value}"]`);
+
+		if(!option){return false;}
+		if(!option.selected) {return false;}
+		option.selected = false;
+		if(fireEvent){
+			this._dispatchEvent();
+		}
+
+		this._appendOption(option);
+		tag.remove();
+		if (this.selectElement.selectedOptions.length === 0){
+			this._showPlaceholder();
+		}
+
+		return true;
+		/*
 		let option = this.selectElement.querySelector(`option[value="${value}"`);
 		
 		option.selected = false;
@@ -262,6 +317,16 @@ class TagPicker {
 		let customOption = this._createOption(optionText, optionValue);
 		this.optionList.appendChild(customOption);
 		return customOption;
+		*/
+	}
+	deselectAll(fireEvent = false){
+		let selectedOptions = this.getSelectedOptions();
+		selectedOptions.forEach((option) => {
+			this.deselectOption(option.value);
+		});
+		if(fireEvent){
+			this._dispatchEvent();	
+		}
 	}
 	open(){
 		this.fancySelect.style = `--t: ${(this.options.openTransition && this.options.openTransition.duration) ?? this.options.defaultTransition.duration}`;
