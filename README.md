@@ -17,18 +17,18 @@ selectEl.addEventListener('change', function(e){
 ## Creation
 | Constructor | Description |
 |:------------|:------------|
-| TagPicker(\<DOMString\> *selector*, \<Object\> *?options*) | Instantiates a TagPicker object with the given css selector. In the case of a class selector (.selector) it will only take the first element matching |
-| TagPicker(\<HTMLElement\> *element*, \<Object\> *?options*) | Instantiates a TagPicker object with the given html element |
+| TagPicker(\<DOMString\> *selector*, \<Object\> *?options*) | Instantiates a TagPicker object with the given css selector. In the case of a class selector (.selector) it will only take the first element matching. |
+| TagPicker(\<HTMLElement\> *element*, \<Object\> *?options*) | Instantiates a TagPicker object with the given html element. |
 
 ## Options
 | Option | Type | Default | Description |
 |:-------|:-----|:--------|:------------|
-| closeOnSelect | Boolean | false | The picker will be closed after every selection if set to *true* |
-| openOnDeselect | Boolean | true | The picker will be opened after an option is deselected if set to *true* |
-| defaultTransition | Object | [\<Transition Options\>](#TransitionOptions) | The fallback options when no specific \<Transition Options\> is set |
+| closeOnSelect | Boolean | false | The picker will be closed after every selection if set to *true*. |
+| openOnDeselect | Boolean | true | The picker will be opened after an option is deselected if set to *true*. |
+| defaultTransition | Object | [\<Transition Options\>](#TransitionOptions) | The fallback options when no specific \<Transition Options\> is set. |
 | defaultRemoveTransition | Object | [\<Remove Transition Options\>](#RemoveTransitionOptions) | The fallback options when no specific \<Remove Transition Options\> is set. |
 
-Available specific transition options are open, close, select and deselect in the format of
+Available specific transition options are open, close, select and deselect in the format of:
 ```javascript
 let tagPickerOptions = {
 	[open,close,select,deselect]Transition: {
@@ -49,7 +49,7 @@ It is recomended to set only *duration*, *easing* and maybe *delay* properties t
 ### <a name="RemoveTransitionOptions"></a>Remove Transition Options
 | Option | Type | Default | Description |
 |:-------|:-----|:--------|:------------|
-| delay | Integer | 300 | The delay in milliseconds before the element (tag or option) is removed |
+| delay | Integer | 300 | The delay in milliseconds before the element (tag or option) is removed. |
 
 ## Methods
 | Method| Returns | Description |
@@ -62,4 +62,4 @@ It is recomended to set only *duration*, *easing* and maybe *delay* properties t
 | close() |  | Closes the options list. |
 | toggle() |  | Toggles between open and closed. |
 | disable() |  | Disables the picker and calls close() |
-| enable() |  | Enables the picker |
+| enable() |  | Enables the picker. |
