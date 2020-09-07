@@ -54,12 +54,27 @@ It is recomended to set only *duration*, *easing* and maybe *delay* properties t
 ## Methods
 | Method| Returns | Description |
 |:------|:--------|:------------|
-| selectOption(\<String\> *value*, \<Boolean\> ?fireEvent) | Boolean | Selects an option. Returns *true* if the selection is successful and *false* if the option does not exist or is already selected. If fireEvent (optional) is set to *true* a **change** event will be fired in the original select element. |
-| deselectOption(\<String\> *value*, \<Boolean\> ?fireEvent) | Boolean | Deselects an option. Returns *true* if the deselection is successful and *false* if the option does not exist or is not selected. If fireEvent (optional) is set to *true* a **change** event will be fired in the original select element. |
-| deselectAll(\<Boolean\> ?fireEvent) |  | Deselects all options at once. If fireEvent (optional) is set to *true* a **change** event will be fired in the original select element after all the options have been deselected. |
+| selectOption(\<String\> *value*, \<Boolean\> *?fireEvent*) | Boolean | Selects an option. Returns *true* if the selection is successful and *false* if the option does not exist or is already selected. If fireEvent (optional) is set to *true* a **change** event will be fired in the original select element. |
+| deselectOption(\<String\> *value*, \<Boolean\> *?fireEvent*) | Boolean | Deselects an option. Returns *true* if the deselection is successful and *false* if the option does not exist or is not selected. If fireEvent (optional) is set to *true* a **change** event will be fired in the original select element. |
+| deselectAll(\<Boolean\> *?fireEvent*) |  | Deselects all options at once. If fireEvent (optional) is set to *true* a **change** event will be fired in the original select element after all the options have been deselected. |
 | getSelectedOptions() | HTMLOptionElement[] | Returns an Array with all the selected options from the original select element. |
 | open() |  | Opens the options list. |
 | close() |  | Closes the options list. |
 | toggle() |  | Toggles between open and closed. |
 | disable() |  | Disables the picker and calls close() |
 | enable() |  | Enables the picker. |
+| update() |  | Removes the selectedTags and optionList elements, removes event proxies and rebuilds them, that includes the placeholder. Will "sort" your selected tags and options to the actual order in the original select element. |
+
+## Update example
+```javascript
+var selectEl = document.getElementById("my-select");
+var tagPickerOptions = {
+	// your settings here
+};
+var myPicker = new TagPicker(selectEl, tagPickerOptions);
+/*
+	Update your original selectEl, you can also access the element via myPicker.selectElement
+	You can also select options without the selectOption method, changes will still be reflected
+*/
+myPicker.update();
+```
