@@ -6,7 +6,6 @@ class TagPicker {
 			this.selectElement = _selectElement;
 		}
 		this.selectElement.tagPicker = this;
-		this.selectOptions = this.selectElement.querySelectorAll('option');
 		let defaultOptions = {
 			closeOnSelect: false,
 			openOnDeselect: true,
@@ -27,9 +26,32 @@ class TagPicker {
 		
 		this.fancySelect.classList.add('tagPicker');
 
-		this.selectedTags = document.createElement('div');
+		this._init();
+		this.selectElement.parentNode.insertBefore(this.fancySelect, this.selectElement);
+		this.selectElementWrapper = document.createElement('div');
+		this.selectElementWrapper.classList.add('originalSelect');
+		this.selectElementWrapper.appendChild(this.selectElement);
+		this.fancySelect.appendChild(this.selectElementWrapper);
+	}
+	_init(){
+		this.selectOptions = this.selectElement.querySelectorAll('option');
+		this.selectedTags = this._createSelectedTagsContainer();
+		this.optionList = this._createOptionList();
 
-		this.selectedTags.classList.add('tagPicker_selectedTags');
+		this.fancySelect.append(this.selectedTags, this.optionList);
+
+		this._addOptionsProxy();
+		this._addTagsProxy();
+	}
+	_clear(){
+		this.selectedTags.remove();
+		this.optionList.remove();
+		this._removeProxies();
+	}
+	_createSelectedTagsContainer(){
+		let selectedTags = document.createElement('div');
+		selectedTags.classList.add('tagPicker_selectedTags');
+		
 		let placeholder = this.selectElement.dataset.placeholder ?? this.selectElement.querySelector('[data-placeholder]').dataset.placeholder;
 		let placeholderContainer = document.createElement('span');
 		placeholderContainer.classList.add('tagPicker-placeholder');
@@ -37,21 +59,12 @@ class TagPicker {
 		
 		this.placeholderContainer = placeholderContainer;
 		
-		this.selectedTags.appendChild(placeholderContainer);
+		selectedTags.appendChild(placeholderContainer);
 		let arrow = document.createElement('div');
 		arrow.classList.add('tagPicker_toggleArrow');
-		this.selectedTags.appendChild(arrow);
+		selectedTags.appendChild(arrow);
 
-		this.optionList = this._createOptionList();
-
-		this.fancySelect.append(this.selectedTags, this.optionList);
-		this.selectElement.parentNode.insertBefore(this.fancySelect, this.selectElement);
-		this.selectElementWrapper = document.createElement('div');
-		this.selectElementWrapper.classList.add('originalSelect');
-		this.selectElementWrapper.appendChild(this.selectElement);
-
-		this._addOptionsProxy();
-		this._addTagsProxy();
+		return selectedTags;
 	}
 
 	_createOption(text, value){
@@ -235,17 +248,7 @@ class TagPicker {
 		createdOption.classList.add('show');
 		if(this.options.openOnDeselect){
 			this.open();
-			/* In case I remove the transform delay on .tagPicker_optionList-option
-			setTimeout(() => {
-				createdOption.classList.add('shown');
-			}, this.options.openTransition.duration ?? this.options.defaultTransition.duration);
-			*/
 		}
-		/* Same reason stated above
-		else{
-			createdOption.classList.add('show');
-		}
-		*/
 
 		setTimeout(() => {
 			let removing = this._animateTagRemove(tag);
@@ -349,5 +352,8 @@ class TagPicker {
 		}
 		return selectedOptions;
 	}
-	update(){return;}
+	update(){
+		this._clear();
+		this._init();
+	}
 }
