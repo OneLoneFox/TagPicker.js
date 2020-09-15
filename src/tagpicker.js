@@ -172,8 +172,8 @@ class TagPicker {
 		let option = e.target.closest('.tagPicker_optionList-option');
 		if(!option){return;}
 		if(option.classList.contains('removing')){return;}
-		if(this.options.maxItems){
-			if(this.selectElement.selectedOptions.length == this.options.maxItems){
+		if(this.getMaxItems()){
+			if(this.selectElement.selectedOptions.length == this.getMaxItems()){
 				this._dispatchEvent('maxItemsExceeded');
 
 				option.classList.add('removing');
@@ -291,6 +291,13 @@ class TagPicker {
 
 	selectOption(value, fireEvent = false){
 		let option = this.selectElement.querySelector(`option[value="${value}"]`);
+		if(this.getMaxItems()){
+			if(this.selectElement.selectedOptions.length == this.getMaxItems()){
+				this._dispatchEvent('maxItemsExceeded');
+
+				return false;
+			}
+		}
 		let customOption = this.optionList.querySelector(`[data-value="${value}"]`);
 
 		if(!option){return false;}
