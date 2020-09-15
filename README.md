@@ -25,6 +25,7 @@ selectEl.addEventListener('change', function(e){
 |:-------|:-----|:--------|:------------|
 | closeOnSelect | Boolean | false | The picker will be closed after every selection if set to *true*. |
 | openOnDeselect | Boolean | true | The picker will be opened after an option is deselected if set to *true*. |
+| <a name="maxItems"></a>maxItems | Integer | Undefined | Limits the amount of items that can be selected. |
 | defaultTransition | Object | [\<Transition Options\>](#TransitionOptions) | The fallback options when no specific \<Transition Options\> is set. |
 | defaultRemoveTransition | Object | [\<Remove Transition Options\>](#RemoveTransitionOptions) | The fallback options when no specific \<Remove Transition Options\> is set. |
 
@@ -58,6 +59,10 @@ It is recomended to set only *duration*, *easing* and maybe *delay* properties t
 | deselectOption(\<String\> *value*, \<Boolean\> *?fireEvent*) | Boolean | Deselects an option. Returns *true* if the deselection is successful and *false* if the option does not exist or is not selected. If fireEvent (optional) is set to *true* a **change** event will be fired in the original select element. |
 | deselectAll(\<Boolean\> *?fireEvent*) |  | Deselects all options at once. If fireEvent (optional) is set to *true* a **change** event will be fired in the original select element after all the options have been deselected. |
 | getSelectedOptions() | HTMLOptionElement[] | Returns an Array with all the selected options from the original select element. |
+| setMaxItems(\<Integer\> *limit*) |  | Sets or updates the value of [maxItems](#maxItems) option. |
+| getMaxItems() | Integer | Gets the value of [maxItems](#maxItems) option. |
+| addOption(\<String\> *text*, \<String\> *value*) | HTMLOptionElement | Creates and adds an option to the original select element and calls the **update()** method. Returns an instance of the created **Option** element. Throws an exception if the option value already exists. |
+| removeOption(\<String\> *value) | HTMLOptionElement | Removes an option from the original select element. Returns an instance of the removed **Option** element. Throws an exception if no option is found with the given value. |
 | open() |  | Opens the options list. |
 | close() |  | Closes the options list. |
 | toggle() |  | Toggles between open and closed. |
