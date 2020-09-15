@@ -55,7 +55,7 @@ It is recomended to set only *duration*, *easing* and maybe *delay* properties t
 ## Methods
 | Method| Returns | Description |
 |:------|:--------|:------------|
-| selectOption(\<String\> *value*, \<Boolean\> *?fireEvent*) | Boolean | Selects an option. Returns *true* if the selection is successful and *false* if the option does not exist or is already selected. If fireEvent (optional) is set to *true* a **change** event will be fired in the original select element. |
+| selectOption(\<String\> *value*, \<Boolean\> *?fireEvent*) | Boolean | Selects an option. Returns *true* if the selection is successful and *false* if the option does not exist or is already selected or the [maxItems](#maxItems) value is reached. If fireEvent (optional) is set to *true* a **change** event will be fired in the original select element. |
 | deselectOption(\<String\> *value*, \<Boolean\> *?fireEvent*) | Boolean | Deselects an option. Returns *true* if the deselection is successful and *false* if the option does not exist or is not selected. If fireEvent (optional) is set to *true* a **change** event will be fired in the original select element. |
 | deselectAll(\<Boolean\> *?fireEvent*) |  | Deselects all options at once. If fireEvent (optional) is set to *true* a **change** event will be fired in the original select element after all the options have been deselected. |
 | getSelectedOptions() | HTMLOptionElement[] | Returns an Array with all the selected options from the original select element. |
