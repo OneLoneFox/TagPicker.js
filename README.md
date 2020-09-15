@@ -62,7 +62,7 @@ It is recomended to set only *duration*, *easing* and maybe *delay* properties t
 | setMaxItems(\<Integer\> *limit*) |  | Sets or updates the value of [maxItems](#maxItems) option. |
 | getMaxItems() | Integer | Gets the value of [maxItems](#maxItems) option. |
 | addOption(\<String\> *text*, \<String\> *value*) | HTMLOptionElement | Creates and adds an option to the original select element and calls the **update()** method. Returns an instance of the created **Option** element. Throws an exception if the option value already exists. |
-| removeOption(\<String\> *value) | HTMLOptionElement | Removes an option from the original select element. Returns an instance of the removed **Option** element. Throws an exception if no option is found with the given value. |
+| removeOption(\<String\> *value*) | HTMLOptionElement | Removes an option from the original select element. Returns an instance of the removed **Option** element. Throws an exception if no option is found with the given value. |
 | open() |  | Opens the options list. |
 | close() |  | Closes the options list. |
 | toggle() |  | Toggles between open and closed. |
