@@ -34,12 +34,19 @@
 			// closeOnSelect: true,
 			defaultTransition:{
 				duration: 150,
+			},
+			selectTransition:{
+				duration: 300,
+				easing: 'cubic-bezier(0.16, 1, 0.3, 1)'
 			}
 		};
 		var tagPicker = new TagPicker(selectEl, tagPickerOptions);
 		selectEl.addEventListener('change', function(e){
 			let selectedTags = this.tagPicker.getSelectedOptions();
 			console.log(selectedTags);
+		});
+		selectEl.addEventListener('maxItemsExceeded', function(e){
+			console.log('maxItemsExceeded');
 		});
 	</script>
 </body>
