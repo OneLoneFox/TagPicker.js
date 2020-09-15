@@ -110,7 +110,7 @@ class TagPicker {
 		let option = this.selectElement.querySelector(`option[value="${value}"]`);
 		
 		option.selected = true;
-		this._dispatchEvent();
+		this._dispatchEvent('change');
 		
 		let optionTag = this._appendTag(option);
 		return optionTag;
@@ -119,7 +119,7 @@ class TagPicker {
 		let option = this.selectElement.querySelector(`option[value="${value}"`);
 		
 		option.selected = false;
-		this._dispatchEvent();
+		this._dispatchEvent('change');
 		
 		let customOption = this._appendOption(option);
 		return customOption;
@@ -144,8 +144,8 @@ class TagPicker {
 	}
 	_showPlaceholder(){this.placeholderContainer.classList.remove("hidden");}
 	_hidePlaceholder(){this.placeholderContainer.classList.add("hidden");}
-	_dispatchEvent(){
-		let event = new CustomEvent('change');
+	_dispatchEvent(eventName){
+		let event = new CustomEvent(eventName);
 		this.selectElement.dispatchEvent(event);
 	}
 	
@@ -172,6 +172,17 @@ class TagPicker {
 		let option = e.target.closest('.tagPicker_optionList-option');
 		if(!option){return;}
 		if(option.classList.contains('removing')){return;}
+		if(this.options.maxItems){
+			if(this.selectElement.selectedOptions.length == this.options.maxItems){
+				this._dispatchEvent('maxItemsExceeded');
+
+				option.classList.add('removing');
+				setTimeout(() => {
+					option.classList.remove('removing');
+				}, this.options.selectTransition.duration ?? this.options.defaultTransition.duration);
+				return;
+			}
+		}
 		
 		if(option.previousElementSibling){
 			option.previousElementSibling.classList.add('beforeRemoving');
@@ -269,6 +280,14 @@ class TagPicker {
 		this.optionList.removeEventListener("click", this._optionsProxy);
 		this.selectedTags.removeEventListener("click", this._tagsProxy);
 	}
+	_checkValueIntegrity(value){
+		for(let i = 0; i < this.selectOptions.length; i++){
+			if(this.selectOptions[i].value == value){
+				throw new Error(`Option with value ${value} already exists.`);
+				break;
+			}
+		}
+	}
 
 	selectOption(value, fireEvent = false){
 		let option = this.selectElement.querySelector(`option[value="${value}"]`);
@@ -278,7 +297,7 @@ class TagPicker {
 		if(option.selected){return false;}
 		option.selected = true;
 		if(fireEvent){
-			this._dispatchEvent();
+			this._dispatchEvent('change');
 		}
 
 		this._appendTag(option);
@@ -294,7 +313,7 @@ class TagPicker {
 		if(!option.selected) {return false;}
 		option.selected = false;
 		if(fireEvent){
-			this._dispatchEvent();
+			this._dispatchEvent('change');
 		}
 
 		this._appendOption(option);
@@ -311,8 +330,32 @@ class TagPicker {
 			this.deselectOption(option.value);
 		});
 		if(fireEvent){
-			this._dispatchEvent();	
+			this._dispatchEvent('change');	
 		}
+	}
+	setMaxItems(limit){
+		this.options.maxItems = limit;
+	}
+	getMaxItems(){
+		return this.options.maxItems;
+	}
+	addOption(text, value){
+		this._checkValueIntegrity(value);
+		let option = document.createElement('option');
+		option.innerText = text;
+		option.value = value;
+		this.selectElement.add(option)
+		this.update();
+		return option;
+	}
+	removeOption(value){
+		let option = this.selectElement.querySelector(`option[value="${value}"`);
+		if(!option){
+			throw new Error(`Option with value ${value} not found.`);
+		}
+		option.remove();
+		this.update();
+		return option;
 	}
 	open(){
 		this.fancySelect.style = `--t: ${(this.options.openTransition && this.options.openTransition.duration) ?? this.options.defaultTransition.duration}`;
