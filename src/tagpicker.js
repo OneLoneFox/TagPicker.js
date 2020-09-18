@@ -365,22 +365,28 @@ class TagPicker {
 		return option;
 	}
 	open(){
-		this.fancySelect.style = `--t: ${(this.options.openTransition && this.options.openTransition.duration) ?? this.options.defaultTransition.duration}`;
+		this.fancySelect.style.setProperty('--t', (
+			this.options.openTransition && this.options.openTransition.duration)
+			?? this.options.defaultTransition.duration
+		);
 		if(!this.fancySelect.classList.contains('open')){
 			this.fancySelect.classList.add('open');
 		}
-	};
+	}
 	close(){
-		this.fancySelect.style = `--t: ${(this.options.closeTransition && this.options.closeTransition.duration) ?? this.options.defaultTransition.duration}`;
+		this.fancySelect.style.setProperty('--t', (
+			this.options.closeTransition && this.options.closeTransition.duration)
+			?? this.options.defaultTransition.duration
+		);
 		this.fancySelect.classList.remove('open');
-	};
+	}
 	toggle(){
 		if(this.fancySelect.classList.contains('open')){
 			this.close();
 		}else{
 			this.open();
 		}
-	};
+	}
 	disable(){
 		this._removeProxies();
 		if(!this.fancySelect.classList.contains('disabled')){
