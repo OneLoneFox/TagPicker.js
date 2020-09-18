@@ -5,12 +5,12 @@ A fancy select multiple
 load css and js files via jsdelivr
 ```html
 <!-- choose one -->
-https://cdn.jsdelivr.net/gh/OneLoneFox/TagPicker.js/src/tagpicker.css
-https://cdn.jsdelivr.net/gh/OneLoneFox/TagPicker.js/src/tagpicker.min.css
+<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/OneLoneFox/TagPicker.js/src/tagpicker.css">
+<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/OneLoneFox/TagPicker.js/src/tagpicker.min.css">
 
 <!-- choose one -->
-<script src="https://cdn.jsdelivr.net/gh/OneLoneFox/TagPicker.js/src/tagpicker.js"></script>
-<script src="https://cdn.jsdelivr.net/gh/OneLoneFox/TagPicker.js/src/tagpicker.min.js"></script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/gh/OneLoneFox/TagPicker.js/src/tagpicker.js"></script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/gh/OneLoneFox/TagPicker.js/src/tagpicker.min.js"></script>
 ```
 
 ## Usage example
