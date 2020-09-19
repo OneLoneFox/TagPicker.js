@@ -32,6 +32,22 @@ selectEl.addEventListener('change', function(e){
 | TagPicker(\<DOMString\> *selector*, \<Object\> *?options*) | Instantiates a TagPicker object with the given css selector. In the case of a class selector (.selector) it will only take the first element matching. |
 | TagPicker(\<HTMLElement\> *element*, \<Object\> *?options*) | Instantiates a TagPicker object with the given html element. |
 
+## Properties
+Accesible properties of the TagPicker instance.
+| Property | Description |
+|:---------|:------------|
+| selectElement | The original HTML Select element. It's still in the DOM but hidden under .TagPicker>.originalSelect (the selectElementWrapper property). The TagPikcer instance is bound to the original element as **originalSelectElement.tagPicker**. |
+| selectElementWrapper | The element containing the original select element. |
+| placeholderContainer | The placeholder element. |
+| options | The options object containing the default and/or custom settings. |
+| fancySelect | The custom created HTML Node. |
+| lastOptionSelected | The latest option selected via manual selection or the selectOption() method. **Default value is Null**. Preselected options won't set this value. |
+| selectedTags | The element containing the tags and placeholder elements. |
+| optionList | The element containing the list of available options to select. |
+| selectOptions | The option elements within the original select element **excluding the placeholder option if there's any**. |
+
+
+
 ## Options
 | Option | Type | Default | Description |
 |:-------|:-----|:--------|:------------|
