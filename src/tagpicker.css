@@ -107,6 +107,7 @@
 	display: inline-block;
 	vertical-align: top;
 	margin: 0 6px 0 0;
+	transition: opacity .5s ease 0s;
 }
 .tagPicker > .tagPicker_selectedTags .tagPicker_selectedTags-tag em {
 	font-style: normal;
@@ -124,6 +125,7 @@
 	background: var(--tag-background-color);
 	z-index: -1;
 	border-radius: 4px;
+	transition: width 0.4s cubic-bezier(0.87, -0.41, 0.19, 1.44) 0s;
 }
 .tagPicker > .tagPicker_selectedTags .tagPicker_selectedTags-tag .remove-icon {
 	cursor: pointer;
@@ -200,7 +202,6 @@
 }
 .tagPicker > .tagPicker_selectedTags .tagPicker_selectedTags-tag.removing.disappear {
 	opacity: 0;
-	transition: opacity .5s ease 0s;
 }
 .tagPicker > .tagPicker_optionList {
 	margin: 0;

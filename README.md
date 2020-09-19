@@ -37,7 +37,8 @@ selectEl.addEventListener('change', function(e){
 |:-------|:-----|:--------|:------------|
 | closeOnSelect | Boolean | false | The picker will be closed after every selection if set to *true*. |
 | openOnDeselect | Boolean | true | The picker will be opened after an option is deselected if set to *true*. |
-| <a name="maxItems"></a>maxItems | Integer | Undefined | Limits the amount of items that can be selected. |
+| <a name="maxItems"></a>maxItems | Integer | Undefined | Limits the amount of items that can be selected. A **maxItemsExceeded** event will be fired at the original select element if you try to select more than the defined value with either manual select or the selectOption() method. |
+| <a name="minItems"></a>minItems | Integer | Undefined | Limits the minimum amount of items that can be selected. A **minItemsExceeded** event will be fired at the original select element if you try to deselect an item when the minimum is already reached with either manual deselection or the deselectOption(). |
 | defaultTransition | Object | [\<Transition Options\>](#TransitionOptions) | The fallback options when no specific \<Transition Options\> is set. |
 | defaultRemoveTransition | Object | [\<Remove Transition Options\>](#RemoveTransitionOptions) | The fallback options when no specific \<Remove Transition Options\> is set. |
 
@@ -67,10 +68,13 @@ It is recomended to set only *duration*, *easing* and maybe *delay* properties t
 ## Methods
 | Method| Returns | Description |
 |:------|:--------|:------------|
-| selectOption(\<String\> *value*, \<Boolean\> *?fireEvent*) | Boolean | Selects an option. Returns *true* if the selection is successful and *false* if the option does not exist or is already selected or the [maxItems](#maxItems) value is reached. If fireEvent (optional) is set to *true* a **change** event will be fired in the original select element. |
-| deselectOption(\<String\> *value*, \<Boolean\> *?fireEvent*) | Boolean | Deselects an option. Returns *true* if the deselection is successful and *false* if the option does not exist or is not selected. If fireEvent (optional) is set to *true* a **change** event will be fired in the original select element. |
-| deselectAll(\<Boolean\> *?fireEvent*) |  | Deselects all options at once. If fireEvent (optional) is set to *true* a **change** event will be fired in the original select element after all the options have been deselected. |
+| selectOption(\<String\> *value*, \<Boolean\> *?fireEvent=false*) | Boolean | Selects an option. Returns *true* if the selection is successful and *false* if the option does not exist or is already selected or the [maxItems](#maxItems) value is reached. If fireEvent (optional) is set to *true* a **change** event will be fired in the original select element. |
+| deselectOption(\<String\> *value*, \<Boolean\> *?fireEvent=false*) | Boolean | Deselects an option. Returns *true* if the deselection is successful and *false* if the option does not exist or is not selected or the [minItems](#minitems) value is reached. If fireEvent (optional) is set to *true* a **change** event will be fired in the original select element. |
+| deselectAll(\<Boolean\> *?fireEvent=false*) |  | Deselects all options at once. If fireEvent (optional) is set to *true* a **change** event will be fired in the original select element after all the options have been deselected. |
 | getSelectedOptions() | HTMLOptionElement[] | Returns an Array with all the selected options from the original select element. |
+| getLastOptionSelected() | HTMLOptionElement | Returns the last Option element that has been selected through manual selection or the selectOption() method. |
+| setMinItems(\<Integer\> *limit*) |  | Sets or updates the value of [minItems](#minItems) option. |
+| getMinItems() | Integer | Gets the value of [minItems](#minItems) option. |
 | setMaxItems(\<Integer\> *limit*) |  | Sets or updates the value of [maxItems](#maxItems) option. |
 | getMaxItems() | Integer | Gets the value of [maxItems](#maxItems) option. |
 | addOption(\<String\> *text*, \<String\> *value*) | HTMLOptionElement | Creates and adds an option to the original select element and calls the **update()** method. Returns an instance of the created **Option** element. Throws an exception if the option value already exists. |
