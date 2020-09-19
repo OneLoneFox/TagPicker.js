@@ -25,6 +25,7 @@ class TagPicker {
 		this.fancySelect = document.createElement('div');
 		
 		this.fancySelect.classList.add('tagPicker');
+		this.lastOptionSelected = null;
 
 		this._init();
 		this.selectElement.parentNode.insertBefore(this.fancySelect, this.selectElement);
@@ -34,7 +35,7 @@ class TagPicker {
 		this.fancySelect.appendChild(this.selectElementWrapper);
 	}
 	_init(){
-		this.selectOptions = this.selectElement.querySelectorAll('option');
+		this.selectOptions = this.selectElement.querySelectorAll('option:not([data-placeholder])');
 		this.selectedTags = this._createSelectedTagsContainer();
 		this.optionList = this._createOptionList();
 
@@ -52,16 +53,24 @@ class TagPicker {
 		let selectedTags = document.createElement('div');
 		selectedTags.classList.add('tagPicker_selectedTags');
 		
-		let placeholder = this.selectElement.dataset.placeholder ?? this.selectElement.querySelector('[data-placeholder]').dataset.placeholder;
+		let placeholder = this.selectElement.dataset.placeholder;
+		if(!placeholder){
+			let placeholderOption = this.selectElement.querySelector('[data-placeholder]')
+			if(placeholderOption){
+				placeholder = placeholderOption.innerText;
+				placeholderOption.selected = false;
+			}
+		}
+		placeholder = placeholder || '';
 		let placeholderContainer = document.createElement('span');
-		placeholderContainer.classList.add('tagPicker-placeholder');
+		placeholderContainer.classList.add('tagPicker-placeholder', 'tagPicker-toggle');
 		placeholderContainer.innerText = placeholder;
 		
 		this.placeholderContainer = placeholderContainer;
 		
 		selectedTags.appendChild(placeholderContainer);
 		let arrow = document.createElement('div');
-		arrow.classList.add('tagPicker_toggleArrow');
+		arrow.classList.add('tagPicker_toggleArrow', 'tagPicker-toggle');
 		selectedTags.appendChild(arrow);
 
 		return selectedTags;
@@ -110,6 +119,7 @@ class TagPicker {
 		let option = this.selectElement.querySelector(`option[value="${value}"]`);
 		
 		option.selected = true;
+		this.lastOptionSelected = option;
 		this._dispatchEvent('change');
 		
 		let optionTag = this._appendTag(option);
@@ -173,13 +183,13 @@ class TagPicker {
 		if(!option){return;}
 		if(option.classList.contains('removing')){return;}
 		if(this.getMaxItems()){
-			if(this.selectElement.selectedOptions.length == this.getMaxItems()){
+			if(this.selectElement.selectedOptions.length >= this.getMaxItems()){
 				this._dispatchEvent('maxItemsExceeded');
 
 				option.classList.add('removing');
 				setTimeout(() => {
 					option.classList.remove('removing');
-				}, this.options.selectTransition.duration ?? this.options.defaultTransition.duration);
+				}, (this.options.selectTransition && this.options.selectTransition.duration) ?? this.options.defaultTransition.duration);
 				return;
 			}
 		}
@@ -238,7 +248,7 @@ class TagPicker {
         return animation;
 	}
 	_toggleProxy = (e) => {
-		let toggleArrow = e.target.closest('.tagPicker_toggleArrow');
+		let toggleArrow = e.target.closest('.tagPicker-toggle');
 		if (toggleArrow){
 			this.toggle();
 		}
@@ -249,6 +259,22 @@ class TagPicker {
 		let tag = e.target.closest('.tagPicker_selectedTags-tag');
 		if(!tag){return;}
 		if(tag.classList.contains('removing')){return;}
+		if(this.getMinItems()){
+			if(this.selectElement.selectedOptions.length <= this.getMinItems()){
+				this._dispatchEvent('minItemsExceeded');
+				
+				tag.classList.remove('notShown');
+				tag.classList.remove('shown');
+				
+				tag.classList.add('removing');
+				tag.classList.add('disappear');
+				setTimeout(() => {
+					tag.classList.remove('removing');
+					tag.classList.remove('disappear');
+				}, (this.options.deselectTransition && this.options.deselectTransition.duration) ?? this.options.defaultTransition.duration);
+				return;
+			}
+		}
 		tag.classList.remove('notShown');
 		tag.classList.remove('shown');
 		
@@ -292,7 +318,7 @@ class TagPicker {
 	selectOption(value, fireEvent = false){
 		let option = this.selectElement.querySelector(`option[value="${value}"]`);
 		if(this.getMaxItems()){
-			if(this.selectElement.selectedOptions.length == this.getMaxItems()){
+			if(this.selectElement.selectedOptions.length >= this.getMaxItems()){
 				this._dispatchEvent('maxItemsExceeded');
 
 				return false;
@@ -303,17 +329,24 @@ class TagPicker {
 		if(!option){return false;}
 		if(option.selected){return false;}
 		option.selected = true;
+		this.lastOptionSelected = option;
 		if(fireEvent){
 			this._dispatchEvent('change');
 		}
 
 		this._appendTag(option);
 		customOption.remove();
-		
 		return true;
 	}
 	deselectOption(value, fireEvent = false){
 		let option = this.selectElement.querySelector(`option[value="${value}"]`);
+		if(this.getMinItems()){
+			if(this.selectElement.selectedOptions.length <= this.getMinItems()){
+				this._dispatchEvent('minItemsExceeded');
+
+				return false;
+			}
+		}
 		let tag = this.selectedTags.querySelector(`[data-value="${value}"]`);
 
 		if(!option){return false;}
@@ -339,6 +372,15 @@ class TagPicker {
 		if(fireEvent){
 			this._dispatchEvent('change');	
 		}
+	}
+	getLastOptionSelected(){
+		return this.lastOptionSelected;
+	}
+	setMinItems(minimum){
+		this.options.minItems = minimum;
+	}
+	getMinItems(){
+		return this.options.minItems;
 	}
 	setMaxItems(limit){
 		this.options.maxItems = limit;
