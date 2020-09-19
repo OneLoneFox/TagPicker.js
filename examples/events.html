@@ -28,20 +28,19 @@
 	<script type="text/javascript" src="../src/tagpicker.js"></script>
 	<script type="text/javascript">
 		var selectEl = document.getElementById("my-select");
-		var tagPickerOptions = {
-			// your settings here
-			defaultTransition:{
-				duration: 150,
-			},
-			selectTransition:{
-				duration: 300,
-				easing: 'cubic-bezier(0.16, 1, 0.3, 1)',
-			},
-			deselectTransition:{ 
-				duration: 300,
-			},
-		};
-		var tagPicker = new TagPicker(selectEl, tagPickerOptions);
+		var tagPicker = new TagPicker(selectEl);
+		
+		selectEl.addEventListener('change', function(e){
+			let selectedTags = this.tagPicker.getSelectedOptions();
+			let values = selectedTags.map(o => o.value);
+			console.log(selectedTags, values);
+		});
+		selectEl.addEventListener('maxItemsExceeded', function(e){
+			console.log('maxItemsExceeded');
+		});
+		selectEl.addEventListener('minItemsExceeded', function(e){
+			console.log('minItemsExceeded');
+		});
 	</script>
 </body>
 </html>

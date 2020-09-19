@@ -18,7 +18,8 @@
 	</style>
 </head>
 <body>
-	<select multiple data-placeholder="Add tags" id="my-select">
+	<select multiple id="my-select">
+		<option disabled selected data-placeholder>Add tags</option>
 		<option value="0">Sketch</option>
 	    <option value="1" selected>Framer X</option>
 	    <option value="2">Photoshop</option>
@@ -28,20 +29,7 @@
 	<script type="text/javascript" src="../src/tagpicker.js"></script>
 	<script type="text/javascript">
 		var selectEl = document.getElementById("my-select");
-		var tagPickerOptions = {
-			// your settings here
-			defaultTransition:{
-				duration: 150,
-			},
-			selectTransition:{
-				duration: 300,
-				easing: 'cubic-bezier(0.16, 1, 0.3, 1)',
-			},
-			deselectTransition:{ 
-				duration: 300,
-			},
-		};
-		var tagPicker = new TagPicker(selectEl, tagPickerOptions);
+		var tagPicker = new TagPicker(selectEl);
 	</script>
 </body>
 </html>
